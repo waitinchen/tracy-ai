@@ -12,13 +12,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod +x ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh ./scripts/start_server.sh
 
 ENV APP_ENV=dev
 
 EXPOSE 8000
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./scripts/start_server.sh"]
 
 
