@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 import requests
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Header
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -107,16 +107,30 @@ class VoiceResponse(BaseModel):
     message: Optional[str] = None
 
 
-async def verify_api_key(request: Request) -> None:
+async def verify_api_key(request: Request, service_api_key: Optional[str] = Header(None, alias="Service-Api-Key")) -> None:
+    """Verify client provided service API key."""
     if not SERVICE_API_KEY:
         return
-    provided = request.headers.get("x-service-api-key") or request.query_params.get("service_api_key")
+
+    provided = (
+        service_api_key
+        or request.headers.get("x-service-api-key")
+        or request.query_params.get("service_api_key")
+    )
+
+    client_host = request.client.host if request.client else "unknown"
+
     if provided != SERVICE_API_KEY:
         logger.warning(
-            "API key 驗證失敗",
-            extra={"path": request.url.path, "client": request.client.host if request.client else None},
+            "service api key invalid",
+            extra={"path": request.url.path, "client": client_host},
         )
-        raise HTTPException(status_code=401, detail="Invalid service API key")
+        raise HTTPException(status_code=401, detail="Invalid Service API Key")
+
+    logger.info(
+        "service api key verified",
+        extra={"path": request.url.path, "client": client_host},
+    )
 
 
 async def enforce_rate_limit(request: Request) -> None:

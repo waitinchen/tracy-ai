@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+const SERVICE_API_KEY =
+  import.meta.env.VITE_SERVICE_API_KEY || "RIUvXLm99TG_jOyN6gP1vTYE1fdmXyMxL5tLDzMwFiA";
+
 type WhisperMessage =
   | { type: "ready" }
   | { type: "final"; text: string }
@@ -54,6 +57,7 @@ const MicRecorder: React.FC<MicRecorderProps> = ({ onVoiceTagsChange, onSpeaking
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Service-Api-Key": SERVICE_API_KEY,
         },
         body: JSON.stringify({ text, emotion_auto: true }),
       });
@@ -134,7 +138,8 @@ const MicRecorder: React.FC<MicRecorderProps> = ({ onVoiceTagsChange, onSpeaking
       streamRef.current = stream;
 
       const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-      const wsUrl = `${protocol}://${window.location.host}/api/whisper`;
+      const params = new URLSearchParams({ service_api_key: SERVICE_API_KEY });
+      const wsUrl = `${protocol}://${window.location.host}/api/whisper?${params.toString()}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
