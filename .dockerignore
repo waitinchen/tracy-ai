@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.mp3
+.DS_Store
+.git
+.gitignore
+node_modules/
+venv/
+.venv/
+.env
+config/.env.*
+!config/.env.*.example
+public/audio/
+tests/__pycache__/
+
+

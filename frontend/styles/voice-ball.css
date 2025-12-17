@@ -1,0 +1,57 @@
+.voiceball-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+  transition: filter 0.5s ease;
+}
+
+.voiceball-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.95;
+  transition: transform 0.6s ease, background 0.6s ease;
+}
+
+.voiceball-halo {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(40px);
+  transition: background 0.6s ease, opacity 0.4s ease;
+}
+
+.voiceball-idle {
+  animation: voiceballFloat 6s ease-in-out infinite;
+}
+
+.voiceball-active {
+  animation: voiceballPulse 3s ease-in-out infinite;
+}
+
+@keyframes voiceballFloat {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
+
+@keyframes voiceballPulse {
+  0% {
+    transform: translateY(0px) scale(1.05);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.15);
+  }
+  100% {
+    transform: translateY(0px) scale(1.05);
+  }
+}
+
